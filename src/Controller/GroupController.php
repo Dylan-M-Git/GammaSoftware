@@ -37,28 +37,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group", name="group_create", methods={"POST"})
-     */
-    public function create(Request $request): JsonResponse
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        try {
-            $group = $this->serializer->deserialize($request->getContent(), Group::class, 'json');
-        } catch (NotEncodableValueException $e) {
-            return $this->json([
-                'message' => 'Wrong data!'
-            ], 400);
-        }
-
-        $this->getDoctrine()->getRepository(Group::class)->add($group, true);
-
-        return $this->json([
-            'message' => 'Group created with success!'
-        ]);
-    }
-
-    /**
      * @Route("/group/{id}", name="group_edit", methods={"PUT"})
      */
     public function edit(int $id, Request $request): JsonResponse
@@ -102,8 +80,29 @@ class GroupController extends AbstractController
         ]);
     }
 
-    // public function bulkCreate(Request $request): JsonResponse
-    // {
+    /**
+     * @Route("/groups", name="group_bulk_create", methods={"POST"})
+     */
+    public function bulkCreate(Request $request): JsonResponse
+    {
+        $em = $this->getDoctrine()->getManager();
 
-    // }
+        $groups = json_decode($request->getContent());    // Passage en tableau pour le parcourir
+
+        foreach ($groups as $group) {
+            try {
+                $g = $this->serializer->deserialize(json_encode($group), Group::class, 'json'); // Pour transformer en objet Group
+            } catch (NotEncodableValueException $e) {
+                return $this->json([
+                    'message' => 'Wrong data!'
+                ], 400);
+            }
+
+            $this->getDoctrine()->getRepository(Group::class)->add($g, true);
+        }
+
+        return $this->json([
+            'message' => 'Groups created with success!'
+        ]);
+    }
 }
