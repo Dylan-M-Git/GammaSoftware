@@ -34,12 +34,12 @@ class Group
     private $city;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="integer")
      */
     private $start_year;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $end_year;
 
@@ -104,24 +104,24 @@ class Group
         return $this;
     }
 
-    public function getStartYear(): ?\DateTimeInterface
+    public function getStartYear(): ?int
     {
         return $this->start_year;
     }
 
-    public function setStartYear(\DateTimeInterface $start_year): self
+    public function setStartYear(int $start_year): self
     {
         $this->start_year = $start_year;
 
         return $this;
     }
 
-    public function getEndYear(): ?\DateTimeInterface
+    public function getEndYear(): ?int
     {
         return $this->end_year;
     }
 
-    public function setEndYear(?\DateTimeInterface $end_year): self
+    public function setEndYear(?int $end_year): self
     {
         $this->end_year = $end_year;
 
