@@ -37,6 +37,20 @@ class GroupController extends AbstractController
     }
 
     /**
+     * @Route("/group/{id}", name="group_get_by_id", methods={"GET"})
+     */
+    public function getById(int $id): Response
+    {
+        $group = $this->getDoctrine()->getRepository(Group::class)->find($id);
+
+        if (!$group) {
+            return $this->json(['message' => "No group for id: $id"], 404);
+        } else {
+            return new Response($this->serializer->serialize($group, 'json'), Response::HTTP_OK, ['Content-type' => 'application/json']);
+        }
+    }
+
+    /**
      * @Route("/group/{id}", name="group_edit", methods={"PUT"})
      */
     public function edit(int $id, Request $request): JsonResponse
@@ -86,6 +100,8 @@ class GroupController extends AbstractController
     public function bulkCreate(Request $request): JsonResponse
     {
         $em = $this->getDoctrine()->getManager();
+
+        $this->getDoctrine()->getRepository(Group::class)->removeAll(); // Suppression de tous les groupes
 
         $groups = json_decode($request->getContent());    // Passage en tableau pour le parcourir
 

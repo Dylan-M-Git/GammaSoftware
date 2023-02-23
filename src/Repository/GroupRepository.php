@@ -43,4 +43,12 @@ class GroupRepository extends ServiceEntityRepository
     {
         $this->getEntityManager()->flush();
     }
+
+    public function removeAll() {
+        $query = $this->createQueryBuilder('g')
+            ->delete()
+            ->getQuery()
+            ->execute();
+        return $query;
+    }
 }
